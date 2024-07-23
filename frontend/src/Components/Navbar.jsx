@@ -5,6 +5,7 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 import { useEffect, useRef, useState } from "react";
+import mixpanel from 'mixpanel-browser';
 import { AiOutlineVideoCameraAdd } from "react-icons/ai";
 import { FiSearch } from "react-icons/fi";
 import { IoIosSearch } from "react-icons/io";
@@ -67,7 +68,7 @@ function Navbar() {
       try {
         if (user?.email) {
           const response = await fetch(
-            `${backendURL}/getuserimage/${user?.email}`
+            `${backendURL}/getuserimage/${user?.email}`,
           );
           const { channelIMG } = await response.json();
           setProfilePic(channelIMG);
@@ -179,27 +180,7 @@ function Navbar() {
             />
           </Tooltip>
 
-          <button
-            onClick={() => {
-              if (isbtnClicked === false) {
-                setisbtnClicked(true);
-                document.body.classList.add("bg-css");
-              } else {
-                setisbtnClicked(false);
-                document.body.classList.remove("bg-css");
-              }
-            }}
-            className={theme ? "signin" : "signin signin-light"}
-            style={
-              User.success
-                ? {
-                    display: "none",
-                  }
-                : {
-                    display: "flex",
-                  }
-            }
-          >
+          <button onClick={() => { mixpanel.track('signin_clicked'); if (isbtnClicked === false) { setisbtnClicked(true); document.body.classList.add("bg-css"); } else { setisbtnClicked(false); document.body.classList.remove("bg-css"); } }} className={theme ? "signin" : "signin signin-light"} style={ User.success ? { display: "none", } : { display: "flex", } } >
             <AccountCircleOutlinedIcon
               fontSize="medium"
               style={{
