@@ -11,7 +11,8 @@ import { IoIosSearch } from "react-icons/io";
 import { RxCross1 } from "react-icons/rx";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import mixpanel from 'mixpanel-browser';
 import { useNavigate, useParams } from "react-router-dom";
 import "../Css/navbar.css";
 import avatar from "../img/avatar.png";
@@ -67,7 +68,7 @@ function Navbar() {
       try {
         if (user?.email) {
           const response = await fetch(
-            `${backendURL}/getuserimage/${user?.email}`
+            `${backendURL}/getuserimage/${user?.email}`,
           );
           const { channelIMG } = await response.json();
           setProfilePic(channelIMG);
@@ -179,27 +180,8 @@ function Navbar() {
             />
           </Tooltip>
 
-          <button
-            onClick={() => {
-              if (isbtnClicked === false) {
-                setisbtnClicked(true);
-                document.body.classList.add("bg-css");
-              } else {
-                setisbtnClicked(false);
-                document.body.classList.remove("bg-css");
-              }
-            }}
-            className={theme ? "signin" : "signin signin-light"}
-            style={
-              User.success
-                ? {
-                    display: "none",
-                  }
-                : {
-                    display: "flex",
-                  }
-            }
-          >
+          <button onClick={() => { mixpanel.track('signin_clicked', { top_threads: 'Technology' }); if (isbtnClicked === false) { setisbtnClicked(true); document.body.classList.add("bg-css"); } else { setisbtn
+          Clicked(false); document.body.classList.remove("bg-css"); } }} className={theme ? "signin" : "signin signin-light"} style={ User.success ? { display: "none", } : { display: "flex", } } >
             <AccountCircleOutlinedIcon
               fontSize="medium"
               style={{
